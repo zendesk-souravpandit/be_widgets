@@ -161,46 +161,52 @@ class BeTextMore extends LeafRenderObjectWidget {
   final Color? selectionColor;
 
   @override
-  RenderObject createRenderObject(final BuildContext context) =>
-      RenderExpandableText(
-        text: text,
-        richData: richData,
-        isCollapsed: isCollapsed,
-        preDataText: preDataText,
-        postDataText: postDataText,
-        preDataTextStyle: preDataTextStyle,
-        postDataTextStyle: postDataTextStyle,
-        richPreData: richPreData,
-        richPostData: richPostData,
-        trimExpandedText: trimExpandedText,
-        trimCollapsedText: trimCollapsedText,
-        colorClickableText: colorClickableText,
-        trimLength: trimLength,
-        trimLines: trimLines,
-        trimMode: trimMode,
-        moreStyle: moreStyle,
-        lessStyle: lessStyle,
-        delimiter: delimiter,
-        delimiterStyle: delimiterStyle,
-        annotations: annotations,
-        isExpandable: isExpandable,
-        style: style,
-        strutStyle: strutStyle,
-        textAlign: textAlign,
-        textDirection: textDirection ?? Directionality.of(context),
-        locale: locale,
-        softWrap: softWrap,
-        overflow: overflow,
-        textScaler: textScaler,
-        semanticsLabel: semanticsLabel,
-        textWidthBasis: textWidthBasis,
-        textHeightBehavior: textHeightBehavior,
-        selectionColor: selectionColor,
-      );
+  RenderObject createRenderObject(final BuildContext context) {
+    final defaultTextStyle = DefaultTextStyle.of(context);
+    final effectiveStyle = style ?? defaultTextStyle.style;
+    return RenderExpandableText(
+      text: text,
+      richData: richData,
+      isCollapsed: isCollapsed,
+      preDataText: preDataText,
+      postDataText: postDataText,
+      preDataTextStyle: preDataTextStyle,
+      postDataTextStyle: postDataTextStyle,
+      richPreData: richPreData,
+      richPostData: richPostData,
+      trimExpandedText: trimExpandedText,
+      trimCollapsedText: trimCollapsedText,
+      colorClickableText: colorClickableText,
+      trimLength: trimLength,
+      trimLines: trimLines,
+      trimMode: trimMode,
+      moreStyle: moreStyle,
+      lessStyle: lessStyle,
+      delimiter: delimiter,
+      delimiterStyle: delimiterStyle,
+      annotations: annotations,
+      isExpandable: isExpandable,
+      style: effectiveStyle,
+      strutStyle: strutStyle,
+      textAlign: textAlign ?? defaultTextStyle.textAlign,
+      textDirection: textDirection ?? Directionality.of(context),
+      locale: locale,
+      softWrap: softWrap ?? defaultTextStyle.softWrap,
+      overflow: overflow ?? defaultTextStyle.overflow,
+      textScaler: textScaler ?? MediaQuery.textScalerOf(context),
+      semanticsLabel: semanticsLabel,
+      textWidthBasis: textWidthBasis ?? defaultTextStyle.textWidthBasis,
+      textHeightBehavior:
+          textHeightBehavior ?? defaultTextStyle.textHeightBehavior,
+      selectionColor: selectionColor,
+    );
+  }
 
   @override
   void updateRenderObject(
       final BuildContext context, final RenderExpandableText renderObject) {
+    final defaultTextStyle = DefaultTextStyle.of(context);
+    final effectiveStyle = style ?? defaultTextStyle.style;
     renderObject
       ..text = text
       ..richData = richData
@@ -223,17 +229,18 @@ class BeTextMore extends LeafRenderObjectWidget {
       ..delimiterStyle = delimiterStyle
       ..annotations = annotations
       ..isExpandable = isExpandable
-      ..style = style
+      ..style = effectiveStyle
       ..strutStyle = strutStyle
-      ..textAlign = textAlign
+      ..textAlign = textAlign ?? defaultTextStyle.textAlign
       ..textDirection = textDirection ?? Directionality.of(context)
       ..locale = locale
-      ..softWrap = softWrap
-      ..overflow = overflow
-      ..textScaler = textScaler
+      ..softWrap = softWrap ?? defaultTextStyle.softWrap
+      ..overflow = overflow ?? defaultTextStyle.overflow
+      ..textScaler = textScaler ?? MediaQuery.textScalerOf(context)
       ..semanticsLabel = semanticsLabel
-      ..textWidthBasis = textWidthBasis
-      ..textHeightBehavior = textHeightBehavior
+      ..textWidthBasis = textWidthBasis ?? defaultTextStyle.textWidthBasis
+      ..textHeightBehavior =
+          textHeightBehavior ?? defaultTextStyle.textHeightBehavior
       ..selectionColor = selectionColor;
   }
 
@@ -370,7 +377,8 @@ class RenderExpandableText extends RenderBox {
   bool _needsLink = false;
   late TextPainter _textPainter;
   late TextSpan _effectiveTextSpan;
-  late Rect _linkRect;
+  int _linkStartOffset = -1;
+  int _linkEndOffset = -1;
   late TapGestureRecognizer _tapRecognizer;
 
   // Getters and setters for all properties
@@ -636,8 +644,10 @@ class RenderExpandableText extends RenderBox {
   }
 
   void _onCollapsedChanged() {
-    if (_isCollapsed != _isCollapsedNotifier!.value) {
-      _isCollapsed = _isCollapsedNotifier!.value;
+    final notifier = _isCollapsedNotifier;
+    if (notifier == null) return;
+    if (_isCollapsed != notifier.value) {
+      _isCollapsed = notifier.value;
       _updateTextPainter();
       markNeedsLayout();
     }
@@ -654,6 +664,21 @@ class RenderExpandableText extends RenderBox {
         markNeedsPaint();
       }
     }
+  }
+
+  /// Adjusts the cutoff position to the nearest word boundary
+  int _findWordBoundary(final String text, final int maxLength) {
+    if (maxLength >= text.length) return text.length;
+    if (maxLength <= 0) return 0;
+
+    final textUpToCutoff = text.substring(0, maxLength);
+    final lastSpaceIndex = textUpToCutoff.lastIndexOf(RegExp(r'\s'));
+
+    // Use word boundary if it's not too far back (at least 30% of cutoff)
+    if (lastSpaceIndex > 0 && lastSpaceIndex >= maxLength * 0.3) {
+      return lastSpaceIndex;
+    }
+    return maxLength;
   }
 
   RegExp? _mergeRegexPatterns(final List<Annotation>? annotations) {
@@ -820,9 +845,11 @@ class RenderExpandableText extends RenderBox {
 
     if (!testPainter.didExceedMaxLines) {
       // Text fits within the maxLines, no trimming needed
+      testPainter.dispose();
       return _TextSpanTrimResult(
           textSpan: textSpan, spanEndIndex: 0, didTrim: false);
     }
+    testPainter.dispose();
 
     // Find the last character that fits within maxLines
     final plainText = textSpan.toPlainText();
@@ -857,7 +884,10 @@ class RenderExpandableText extends RenderBox {
       );
       cutoffPainter.layout(maxWidth: maxWidth);
 
-      if (!cutoffPainter.didExceedMaxLines) {
+      final didExceed = cutoffPainter.didExceedMaxLines;
+      cutoffPainter.dispose();
+
+      if (!didExceed) {
         bestCutoff = mid;
         left = mid + 1;
       } else {
@@ -866,11 +896,22 @@ class RenderExpandableText extends RenderBox {
     }
 
     // If we couldn't fit anything, fallback to a minimal cutoff
-    if (bestCutoff == 0) {
+    if (bestCutoff == 0 && textLength > 0) {
       bestCutoff = 1;
     }
 
-    final trimmedText = plainText.substring(0, bestCutoff);
+    // Find word boundary - look for the last space before bestCutoff
+    if (bestCutoff > 0) {
+      final textUpToCutoff = plainText.substring(0, bestCutoff);
+      final lastSpaceIndex = textUpToCutoff.lastIndexOf(RegExp(r'\s'));
+      // Use word boundary if it's not too far back (at least 30% of cutoff)
+      if (lastSpaceIndex > 0 && lastSpaceIndex >= bestCutoff * 0.3) {
+        bestCutoff = lastSpaceIndex;
+      }
+    }
+
+    final trimmedText =
+        bestCutoff > 0 ? plainText.substring(0, bestCutoff).trimRight() : '';
     final trimmedSpan = _createTextSpanFromSubstring(textSpan, trimmedText);
 
     return _TextSpanTrimResult(
@@ -981,6 +1022,7 @@ class RenderExpandableText extends RenderBox {
 
     // Simple text span for now, layout will handle trimming
     _effectiveTextSpan = TextSpan(
+      style: effectiveStyle,
       children: [
         if (preTextSpan != null) preTextSpan,
         dataTextSpan,
@@ -1027,8 +1069,11 @@ class RenderExpandableText extends RenderBox {
       final plainText = _effectiveTextSpan.toPlainText();
       needsTrimming = plainText.runes.length > _trimLength;
     }
+    testPainter.dispose();
 
     _needsLink = needsTrimming;
+    _linkStartOffset = -1;
+    _linkEndOffset = -1;
 
     if (needsTrimming && _isCollapsed) {
       // Create trimmed version with link
@@ -1048,25 +1093,44 @@ class RenderExpandableText extends RenderBox {
 
       // Build trimmed content
       TextSpan trimmedSpan;
+      int baseOffset = 0;
+
       if (_trimMode == TrimMode.length) {
+        final preSpan = _getPreSpan();
         final dataSpan = _getDataSpan();
+        // Find word boundary for cleaner trimming
+        final plainText = dataSpan.toPlainText();
+        final adjustedLength = _findWordBoundary(plainText, _trimLength);
         final trimResult = _trimTextSpan(
           textSpan: dataSpan,
           spanStartIndex: 0,
-          endIndex: _trimLength,
+          endIndex: adjustedLength,
           splitByRunes: true,
         );
-        trimmedSpan = TextSpan(
-          children: [
-            _getPreSpan(),
-            trimResult.textSpan,
-            delimiter,
-            link,
-            _getPostSpan(),
-          ].where((final span) => span != null).cast<TextSpan>().toList(),
-        );
+
+        final children = <TextSpan>[];
+        if (preSpan != null) {
+          children.add(preSpan);
+          baseOffset += preSpan.toPlainText().length;
+        }
+        children.add(trimResult.textSpan);
+        baseOffset += trimResult.textSpan.toPlainText().length;
+        children.add(delimiter);
+        baseOffset += delimiter.toPlainText().length;
+
+        _linkStartOffset = baseOffset;
+        children.add(link);
+        _linkEndOffset = baseOffset + linkText.length;
+
+        final postSpan = _getPostSpan();
+        if (postSpan != null) {
+          children.add(postSpan);
+        }
+
+        trimmedSpan = TextSpan(children: children);
       } else {
         // For line trimming, we need to calculate based on layout
+        final preSpan = _getPreSpan();
         final dataSpan = _getDataSpan();
         final trimResult = _trimTextSpanByLines(
           textSpan: dataSpan,
@@ -1075,15 +1139,27 @@ class RenderExpandableText extends RenderBox {
           delimiter: delimiter,
           link: link,
         );
-        trimmedSpan = TextSpan(
-          children: [
-            _getPreSpan(),
-            trimResult.textSpan,
-            delimiter,
-            link,
-            _getPostSpan(),
-          ].where((final span) => span != null).cast<TextSpan>().toList(),
-        );
+
+        final children = <TextSpan>[];
+        if (preSpan != null) {
+          children.add(preSpan);
+          baseOffset += preSpan.toPlainText().length;
+        }
+        children.add(trimResult.textSpan);
+        baseOffset += trimResult.textSpan.toPlainText().length;
+        children.add(delimiter);
+        baseOffset += delimiter.toPlainText().length;
+
+        _linkStartOffset = baseOffset;
+        children.add(link);
+        _linkEndOffset = baseOffset + linkText.length;
+
+        final postSpan = _getPostSpan();
+        if (postSpan != null) {
+          children.add(postSpan);
+        }
+
+        trimmedSpan = TextSpan(children: children);
       }
 
       _textPainter = TextPainter(
@@ -1092,7 +1168,8 @@ class RenderExpandableText extends RenderBox {
         textDirection: _textDirection,
         locale: _locale,
         textScaler: _textScaler ?? TextScaler.noScaling,
-        maxLines: _isCollapsed ? _trimLines : null,
+        // Only apply maxLines for line-based trimming
+        maxLines: _trimMode == TrimMode.line ? _trimLines : null,
         strutStyle: _strutStyle,
         textWidthBasis: _textWidthBasis ?? TextWidthBasis.parent,
         textHeightBehavior: _textHeightBehavior,
@@ -1109,6 +1186,10 @@ class RenderExpandableText extends RenderBox {
           text: ' $linkText',
           style: defaultLessStyle,
           recognizer: _tapRecognizer);
+
+      final baseOffset = _effectiveTextSpan.toPlainText().length;
+      _linkStartOffset = baseOffset;
+      _linkEndOffset = baseOffset + linkText.length + 1; // +1 for leading space
 
       final expandedSpan = TextSpan(children: [_effectiveTextSpan, link]);
 
@@ -1139,26 +1220,6 @@ class RenderExpandableText extends RenderBox {
     }
 
     _textPainter.layout(maxWidth: maxWidth);
-
-    // Calculate link rectangle for hit testing
-    if (_needsLink) {
-      final text = _textPainter.text!.toPlainText();
-      final linkText = _isCollapsed ? _trimCollapsedText : _trimExpandedText;
-      final linkIndex = text.indexOf(linkText);
-      if (linkIndex >= 0) {
-        final linkOffset = _textPainter.getOffsetForCaret(
-            TextPosition(offset: linkIndex), Rect.zero);
-        final linkWidth = _textPainter.width - linkOffset.dx;
-        final linkHeight = _textPainter.preferredLineHeight;
-        _linkRect =
-            Rect.fromLTWH(linkOffset.dx, linkOffset.dy, linkWidth, linkHeight);
-      } else {
-        _linkRect = Rect.zero;
-      }
-    } else {
-      _linkRect = Rect.zero;
-    }
-
     size = constraints.constrain(_textPainter.size);
   }
 
@@ -1210,13 +1271,26 @@ class RenderExpandableText extends RenderBox {
   @override
   bool hitTestSelf(final Offset position) => true;
 
+  bool _isPositionOnLink(final Offset position) {
+    if (!_needsLink || _linkStartOffset < 0 || _linkEndOffset < 0) {
+      return false;
+    }
+
+    final textPosition = _textPainter.getPositionForOffset(position);
+    final offset = textPosition.offset;
+
+    return offset >= _linkStartOffset && offset < _linkEndOffset;
+  }
+
   @override
   void handleEvent(
       final PointerEvent event, covariant final BoxHitTestEntry entry) {
-    if (event is PointerUpEvent && _needsLink && _isExpandable) {
-      final localPosition = event.localPosition;
-      if (_linkRect.contains(localPosition)) {
-        _handleTap();
+    if (!_isExpandable || !_needsLink) return;
+
+    if (event is PointerDownEvent) {
+      // Use entry.localPosition for correct hit testing coordinates
+      if (_isPositionOnLink(entry.localPosition)) {
+        _tapRecognizer.addPointer(event);
       }
     }
   }
@@ -1225,7 +1299,7 @@ class RenderExpandableText extends RenderBox {
   void describeSemanticsConfiguration(final SemanticsConfiguration config) {
     super.describeSemanticsConfiguration(config);
     config
-      ..label = _semanticsLabel ?? _text ?? ''
+      ..label = _semanticsLabel ?? _text ?? _richData?.toPlainText() ?? ''
       ..textDirection = _textDirection
       ..onTap = () {
         if (_needsLink && _isExpandable) {
@@ -1236,6 +1310,7 @@ class RenderExpandableText extends RenderBox {
 
   @override
   void dispose() {
+    _textPainter.dispose();
     _tapRecognizer.dispose();
     _isCollapsedNotifier?.removeListener(_onCollapsedChanged);
     super.dispose();

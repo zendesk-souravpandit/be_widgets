@@ -1,3 +1,28 @@
+## 1.2.2
+
+### Fixed - BeTextMore
+
+- **Style not applied**: Fixed root TextSpan missing style property
+- **Hit test not working**: Fixed "Show more/less" tap detection using correct local coordinates
+- **Memory leaks**: Fixed TextPainter instances not being disposed properly
+- **Resize handling**: Fixed maxLines constraint incorrectly applied in TrimMode.length mode
+- **Word boundary trimming**: Text now trims at word boundaries instead of mid-word for cleaner display
+- **Semantics**: Fixed semantics label fallback for rich text content
+- **Race condition**: Added null safety guard in collapse state listener
+- **Binary search fallback**: Fixed potential crash with empty strings
+
+### Added
+
+- Added comprehensive widgetbook examples for BeTextMore:
+  - Line Trim Mode
+  - Length Trim Mode
+  - With Pre/Post Text
+  - With Annotations (URLs, hashtags, mentions, emails)
+  - Custom Styles
+  - Non-Expandable mode
+  - Rich Text support
+  - External Collapse Control
+
 ## 1.2.1
 
 - Added demo and showcase example
