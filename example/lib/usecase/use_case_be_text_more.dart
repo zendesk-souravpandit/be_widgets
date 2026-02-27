@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:widgetbook/widgetbook.dart';
 import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;
 
-@widgetbook.UseCase(name: 'Line Trim Mode', path: '/BeTextMore', type: BeTextMore)
+@widgetbook.UseCase(
+    name: 'Line Trim Mode', path: '/BeTextMore', type: BeTextMore)
 Widget renderLineTrimMode(final BuildContext context) {
   final trimLines = context.knobs.int
       .slider(label: 'Trim Lines', initialValue: 3, min: 1, max: 6);
@@ -170,7 +171,8 @@ Widget renderWithAnnotations(final BuildContext context) {
                 // URL pattern
                 Annotation(
                   regExp: RegExp(r'https?://[^\s]+'),
-                  spanBuilder: ({required String text, required TextStyle textStyle}) {
+                  spanBuilder: (
+                      {required String text, required TextStyle textStyle}) {
                     return TextSpan(
                       text: text,
                       style: textStyle.copyWith(
@@ -183,7 +185,8 @@ Widget renderWithAnnotations(final BuildContext context) {
                 // Hashtag pattern
                 Annotation(
                   regExp: RegExp(r'#\w+'),
-                  spanBuilder: ({required String text, required TextStyle textStyle}) {
+                  spanBuilder: (
+                      {required String text, required TextStyle textStyle}) {
                     return TextSpan(
                       text: text,
                       style: textStyle.copyWith(
@@ -196,7 +199,8 @@ Widget renderWithAnnotations(final BuildContext context) {
                 // Mention pattern
                 Annotation(
                   regExp: RegExp(r'@\w+'),
-                  spanBuilder: ({required String text, required TextStyle textStyle}) {
+                  spanBuilder: (
+                      {required String text, required TextStyle textStyle}) {
                     return TextSpan(
                       text: text,
                       style: textStyle.copyWith(
@@ -209,7 +213,8 @@ Widget renderWithAnnotations(final BuildContext context) {
                 // Email pattern
                 Annotation(
                   regExp: RegExp(r'[\w.]+@[\w.]+\.\w+'),
-                  spanBuilder: ({required String text, required TextStyle textStyle}) {
+                  spanBuilder: (
+                      {required String text, required TextStyle textStyle}) {
                     return TextSpan(
                       text: text,
                       style: textStyle.copyWith(

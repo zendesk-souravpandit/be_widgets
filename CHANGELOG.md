@@ -1,4 +1,4 @@
-## 1.2.2
+## 1.2.3
 
 ### Fixed - BeTextMore
 
@@ -22,6 +22,10 @@
   - Non-Expandable mode
   - Rich Text support
   - External Collapse Control
+
+## 1.2.2
+
+- doc update
 
 ## 1.2.1
 
