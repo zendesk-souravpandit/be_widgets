@@ -12,6 +12,7 @@ export 'src/be_row.dart';
 export 'src/be_size_aware.dart';
 export 'src/be_text_more.dart';
 export 'src/be_wrap.dart';
+export 'src/overflow_view/be_overflow_view.dart';
 export 'src/decoration/be_box_decoration.dart';
 export 'src/decoration/be_box_shadow.dart';
 export 'src/decoration/be_icon_shape_border.dart';
