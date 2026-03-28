@@ -32,6 +32,8 @@ import 'package:example/usecase/use_case_be_multi_label.dart'
     as _example_usecase_use_case_be_multi_label;
 import 'package:example/usecase/use_case_be_offset.dart'
     as _example_usecase_use_case_be_offset;
+import 'package:example/usecase/use_case_be_overflow_view.dart'
+    as _example_usecase_use_case_be_overflow_view;
 import 'package:example/usecase/use_case_be_row.dart'
     as _example_usecase_use_case_be_row;
 import 'package:example/usecase/use_case_be_size_aware.dart'
@@ -46,130 +48,139 @@ final directories = <_widgetbook.WidgetbookNode>[
   _widgetbook.WidgetbookFolder(
     name: '/',
     children: [
-      _widgetbook.WidgetbookComponent(
+      _widgetbook.WidgetbookLeafComponent(
         name: 'BeBadge',
-        useCases: [
-          _widgetbook.WidgetbookUseCase(
-            name: 'BeBadge',
-            builder: _example_usecase_use_case_be_badge.renderBeBadgeWidget,
-          )
-        ],
+        useCase: _widgetbook.WidgetbookUseCase(
+          name: 'BeBadge',
+          builder: _example_usecase_use_case_be_badge.renderBeBadgeWidget,
+        ),
       ),
-      _widgetbook.WidgetbookComponent(
+      _widgetbook.WidgetbookLeafComponent(
         name: 'BeBoxDecoration',
-        useCases: [
-          _widgetbook.WidgetbookUseCase(
-            name: 'BeBoxDecoration',
-            builder: _example_usecase_use_case_be_box_decoration
-                .renderBeBoxDecorationWidget,
-          )
-        ],
+        useCase: _widgetbook.WidgetbookUseCase(
+          name: 'BeBoxDecoration',
+          builder: _example_usecase_use_case_be_box_decoration
+              .renderBeBoxDecorationWidget,
+        ),
       ),
-      _widgetbook.WidgetbookComponent(
+      _widgetbook.WidgetbookLeafComponent(
         name: 'BeBoxShadow',
-        useCases: [
-          _widgetbook.WidgetbookUseCase(
-            name: 'BeBoxShadow',
-            builder:
-                _example_usecase_use_case_be_box_shadow.renderBeBoxShadowWidget,
-          )
-        ],
+        useCase: _widgetbook.WidgetbookUseCase(
+          name: 'BeBoxShadow',
+          builder:
+              _example_usecase_use_case_be_box_shadow.renderBeBoxShadowWidget,
+        ),
       ),
-      _widgetbook.WidgetbookComponent(
+      _widgetbook.WidgetbookLeafComponent(
         name: 'BeBreakpoint',
-        useCases: [
-          _widgetbook.WidgetbookUseCase(
-            name: 'BeBreakpoint',
-            builder: _example_usecase_use_case_be_breakpoint
-                .renderBeBreakpointWidget,
-          )
-        ],
+        useCase: _widgetbook.WidgetbookUseCase(
+          name: 'BeBreakpoint',
+          builder:
+              _example_usecase_use_case_be_breakpoint.renderBeBreakpointWidget,
+        ),
       ),
-      _widgetbook.WidgetbookComponent(
+      _widgetbook.WidgetbookLeafComponent(
         name: 'BeColumn',
-        useCases: [
-          _widgetbook.WidgetbookUseCase(
-            name: 'BeColumn',
-            builder: _example_usecase_use_case_be_column.renderBeColumnWidget,
-          )
-        ],
+        useCase: _widgetbook.WidgetbookUseCase(
+          name: 'BeColumn',
+          builder: _example_usecase_use_case_be_column.renderBeColumnWidget,
+        ),
       ),
-      _widgetbook.WidgetbookComponent(
+      _widgetbook.WidgetbookLeafComponent(
         name: 'BeContainer',
-        useCases: [
-          _widgetbook.WidgetbookUseCase(
-            name: 'BeContainer',
-            builder:
-                _example_usecase_use_case_be_container.renderBeContainerWidget,
-          )
-        ],
+        useCase: _widgetbook.WidgetbookUseCase(
+          name: 'BeContainer',
+          builder:
+              _example_usecase_use_case_be_container.renderBeContainerWidget,
+        ),
       ),
-      _widgetbook.WidgetbookComponent(
+      _widgetbook.WidgetbookLeafComponent(
         name: 'BeIconShapeBorder',
-        useCases: [
-          _widgetbook.WidgetbookUseCase(
-            name: 'BeIconShapeBorder',
-            builder: _example_usecase_use_case_be_icon_shape_border
-                .renderBeIconShapeBorderWidget,
-          )
-        ],
+        useCase: _widgetbook.WidgetbookUseCase(
+          name: 'BeIconShapeBorder',
+          builder: _example_usecase_use_case_be_icon_shape_border
+              .renderBeIconShapeBorderWidget,
+        ),
       ),
-      _widgetbook.WidgetbookComponent(
+      _widgetbook.WidgetbookLeafComponent(
         name: 'BeLabel',
-        useCases: [
-          _widgetbook.WidgetbookUseCase(
-            name: 'BeLabel',
-            builder: _example_usecase_use_case_be_label.renderBeLabelWidget,
-          )
-        ],
+        useCase: _widgetbook.WidgetbookUseCase(
+          name: 'BeLabel',
+          builder: _example_usecase_use_case_be_label.renderBeLabelWidget,
+        ),
       ),
-      _widgetbook.WidgetbookComponent(
+      _widgetbook.WidgetbookLeafComponent(
         name: 'BeMultiBadge',
-        useCases: [
-          _widgetbook.WidgetbookUseCase(
-            name: 'BeMultiBadge',
-            builder: _example_usecase_use_case_be_multi_badge
-                .renderBeMultiBadgeWidget,
-          )
-        ],
+        useCase: _widgetbook.WidgetbookUseCase(
+          name: 'BeMultiBadge',
+          builder:
+              _example_usecase_use_case_be_multi_badge.renderBeMultiBadgeWidget,
+        ),
       ),
-      _widgetbook.WidgetbookComponent(
+      _widgetbook.WidgetbookLeafComponent(
         name: 'BeMultiLabel',
-        useCases: [
-          _widgetbook.WidgetbookUseCase(
-            name: 'BeMultiLabel',
-            builder: _example_usecase_use_case_be_multi_label
-                .renderBeMultiLabelWidget,
-          )
-        ],
+        useCase: _widgetbook.WidgetbookUseCase(
+          name: 'BeMultiLabel',
+          builder:
+              _example_usecase_use_case_be_multi_label.renderBeMultiLabelWidget,
+        ),
       ),
-      _widgetbook.WidgetbookComponent(
+      _widgetbook.WidgetbookLeafComponent(
         name: 'BeOffset',
-        useCases: [
-          _widgetbook.WidgetbookUseCase(
-            name: 'BeOffset',
-            builder: _example_usecase_use_case_be_offset.renderBeOffsetWidget,
-          )
-        ],
+        useCase: _widgetbook.WidgetbookUseCase(
+          name: 'BeOffset',
+          builder: _example_usecase_use_case_be_offset.renderBeOffsetWidget,
+        ),
       ),
       _widgetbook.WidgetbookComponent(
-        name: 'BeRow',
+        name: 'BeOverflowView',
         useCases: [
           _widgetbook.WidgetbookUseCase(
-            name: 'BeRow',
-            builder: _example_usecase_use_case_be_row.useCaseBeRow,
-          )
-        ],
-      ),
-      _widgetbook.WidgetbookComponent(
-        name: 'BeSizeAware',
-        useCases: [
+            name: 'Action Buttons',
+            builder: _example_usecase_use_case_be_overflow_view
+                .renderActionButtonsOverflow,
+          ),
           _widgetbook.WidgetbookUseCase(
-            name: 'BeSizeAware',
+            name: 'Avatar Stack',
+            builder: _example_usecase_use_case_be_overflow_view
+                .renderAvatarStackOverflow,
+          ),
+          _widgetbook.WidgetbookUseCase(
+            name: 'Nested Overflow',
             builder:
-                _example_usecase_use_case_be_size_aware.renderBeSizeAwareWidget,
-          )
+                _example_usecase_use_case_be_overflow_view.renderNestedOverflow,
+          ),
+          _widgetbook.WidgetbookUseCase(
+            name: 'Tag Chips',
+            builder: _example_usecase_use_case_be_overflow_view
+                .renderTagChipsOverflow,
+          ),
+          _widgetbook.WidgetbookUseCase(
+            name: 'Toolbar with Menu',
+            builder: _example_usecase_use_case_be_overflow_view
+                .renderToolbarWithMenu,
+          ),
+          _widgetbook.WidgetbookUseCase(
+            name: 'Vertical List',
+            builder: _example_usecase_use_case_be_overflow_view
+                .renderVerticalOverflow,
+          ),
         ],
+      ),
+      _widgetbook.WidgetbookLeafComponent(
+        name: 'BeRow',
+        useCase: _widgetbook.WidgetbookUseCase(
+          name: 'BeRow',
+          builder: _example_usecase_use_case_be_row.useCaseBeRow,
+        ),
+      ),
+      _widgetbook.WidgetbookLeafComponent(
+        name: 'BeSizeAware',
+        useCase: _widgetbook.WidgetbookUseCase(
+          name: 'BeSizeAware',
+          builder:
+              _example_usecase_use_case_be_size_aware.renderBeSizeAwareWidget,
+        ),
       ),
       _widgetbook.WidgetbookFolder(
         name: 'BeTextMore',
@@ -220,14 +231,12 @@ final directories = <_widgetbook.WidgetbookNode>[
           )
         ],
       ),
-      _widgetbook.WidgetbookComponent(
+      _widgetbook.WidgetbookLeafComponent(
         name: 'BeWrap',
-        useCases: [
-          _widgetbook.WidgetbookUseCase(
-            name: 'BeWrap',
-            builder: _example_usecase_use_case_be_wrap.renderBeWrapWidget,
-          )
-        ],
+        useCase: _widgetbook.WidgetbookUseCase(
+          name: 'BeWrap',
+          builder: _example_usecase_use_case_be_wrap.renderBeWrapWidget,
+        ),
       ),
     ],
   )
