@@ -1,3 +1,29 @@
+## 1.3.0
+
+### Added
+
+- **BeOverflowView**: New widget that displays children in a row/column and shows an overflow indicator (e.g., "+3 more") when there's not enough space
+  - Supports horizontal and vertical directions
+  - Fixed mode: all children have the same size as the first child
+  - Flexible mode: each child can have its own size
+  - Configurable spacing between items
+  - Reverse display order support
+  - Custom overflow indicator builder
+
+### Example
+
+```dart
+BeOverflowView(
+  spacing: 8,
+  builder: (context, count) => Text('+$count more'),
+  children: [
+    Chip(label: Text('Tag 1')),
+    Chip(label: Text('Tag 2')),
+    Chip(label: Text('Tag 3')),
+  ],
+)
+```
+
 ## 1.2.3
 
 ### Fixed - BeTextMore
@@ -45,23 +71,6 @@
 - Added Responsive widget
 
 ---
-
-Update the version and date as needed when you release these changes.
-If you want a more detailed changelog for specific commits or features, let me know!## [Unreleased]
-
-### Added
-
-- Introduced new widgets: `be_badge.dart`, `be_multi_badge.dart`, `be_label.dart`, `be_multi_label.dart`, `be_text_more.dart`, `be_size_aware.dart`, `be_wrap.dart`, `be_row.dart`, `be_column.dart`, `be_container.dart`, `be_offset.dart`, `be_breakpoint.dart`.
-- Added decoration utilities: `decoration/be_box_decoration.dart`, `decoration/be_box_shadow.dart`, `decoration/be_icon_shape_border.dart`.
-
-### Changed
-
-- Refactored widget structure to use a modular approach under `lib/src/`.
-- Improved code organization by separating decoration-related files into their own subfolder.
-
-### Fixed
-
-- Various minor bug fixes and improvements to widget rendering and responsiveness.
 
 ## 1.1.7
 

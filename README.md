@@ -1,5 +1,3 @@
-<<<<<<< HEAD
-=======
 ## Showcase
 
 Below are some visual showcases of the widgets in action:
@@ -17,10 +15,8 @@ Below are some visual showcases of the widgets in action:
   <img src="example/showcase/Screencast%20from%202025-09-11%2021-05-45.gif" width="400" />
   <img src="example/showcase/Screencast%20from%202025-09-11%2021-06-21.gif" width="400" />
   <img src="example/showcase/Screencastfrom2025-09-1120-58-11-ezgif.com-video-to-gif-converter.gif" width="400" />
-
 </p>
 
->>>>>>> upstream/main
 ## Example Usage
 
 Below are example code snippets for the main widgets and utilities:
@@ -127,6 +123,38 @@ Container(
 )
 ```
 
+### BeOverflowView
+
+Display children in a row/column with an overflow indicator when space is limited:
+
+```dart
+BeOverflowView(
+  spacing: 8,
+  builder: (context, count) => Text('+$count more'),
+  children: [
+    Chip(label: Text('Tag 1')),
+    Chip(label: Text('Tag 2')),
+    Chip(label: Text('Tag 3')),
+    Chip(label: Text('Tag 4')),
+  ],
+)
+
+// Flexible mode - each child can have different sizes
+BeOverflowView.flexible(
+  spacing: 8,
+  direction: Axis.horizontal,
+  builder: (context, count) => Container(
+    padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+    decoration: BoxDecoration(
+      color: Colors.grey[300],
+      borderRadius: BorderRadius.circular(12),
+    ),
+    child: Text('+$count'),
+  ),
+  children: tags.map((tag) => Chip(label: Text(tag))).toList(),
+)
+```
+
 <!--
 This README describes the package. If you publish this package to pub.dev,
 this README's contents appear on the landing page for your package.
@@ -171,6 +199,7 @@ Below are the main exports provided by the package:
 - **be_size_aware.dart**: Utilities and widgets for size awareness and adaptive rendering.
 - **be_text_more.dart**: BeTextMore widget for expandable/collapsible text with “show more/less” functionality.
 - **be_wrap.dart**: BeWrap widget for wrapping children with responsive spacing and alignment.
+- **overflow_view/be_overflow_view.dart**: BeOverflowView widget for displaying children with an overflow indicator when space is limited.
 - **decoration/be_box_decoration.dart**: BeBoxDecoration for advanced box decoration, including custom shadows and interpolation.
 - **decoration/be_box_shadow.dart**: BeBoxShadow for enhanced shadow effects, including inset and outset support.
 - **decoration/be_icon_shape_border.dart**: BeIconShapeBorder for drawing icons inside custom shape borders.
